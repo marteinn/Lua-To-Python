@@ -6,7 +6,10 @@ import pprint
 tree = ast.parse(
 """
 
-val = True
+def bar(a, b, c):
+    print(a, b, c)
+    return 1
+
 
 """
 )

@@ -51,11 +51,34 @@ def parse_nodes(nodes):
             )
             continue
 
-
         if node["type"] == "expr":
             out.append(
                 ast.Expr(
                     value=parse_nodes(node["value"])[0]
+                )
+            )
+            continue
+
+        if node["type"] == "function":
+            body_nodes = parse_nodes(node["body"])
+            out.append(
+                ast.FunctionDef(
+                    name=node["name"],
+                    args=ast.arguments(
+                        args=[
+                            ast.arg(
+                                arg=x["name"],
+                                annotation=None,
+                            ) for x in node["args"]
+                        ],
+                        vararg=None,
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        kwarg=None,
+                        defaults=[]
+                    ),
+                    body=body_nodes,
+                    decorator_list=[],
                 )
             )
             continue

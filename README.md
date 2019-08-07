@@ -5,7 +5,7 @@ This is a project where I attempt to convert Lua to Python, by transforming Lua 
 Its only for getting to know the Python AST so please dont do anything serious with it.
 
 ## Current status
-- Variable assignments, basic datatypes and comparisons, if statements and while loops are working.
+- Variable assignments, basic datatypes and comparisons, if statements, while loops and functions are working.
 
 
 ## Getting started
@@ -33,10 +33,10 @@ Its only for getting to know the Python AST so please dont do anything serious w
 - [x] `>=` operator
 - [x] `<=` operator
 - [x] Boolean types
-- [ ] `function` declarations
+- [x] `function` declarations
+- [ ] `return`
 - [ ] `not` eval
 - [ ] Anonymous functions
-- [ ] `return`
 - [ ] `bool` expression in comparison
 - [ ] Double number support
 - [ ] Negative values

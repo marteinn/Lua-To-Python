@@ -87,6 +87,25 @@ def parse_tokens(tokens, in_expr=0):
             })
             continue
 
+        if token["type"] == "KEYWORD" and token["value"] == "function":
+            function_tokens = extract_scope_body(tokens)
+            signature_tokens = extract_fn_signature(function_tokens)
+            name_token = signature_tokens.pop(0)  # TODO: Add anonymous support
+
+            parameter_tokens = signature_tokens[1:-1]
+            parameter_tokens = map(
+                lambda x: {"type": "argument", "name": x["value"]},
+                parameter_tokens
+            )
+
+            out.append({
+                "type": "function",
+                "name": name_token["value"],
+                "args": list(parameter_tokens),
+                "body": parse_tokens(function_tokens),
+            })
+            continue
+
         if token["type"] == "NAME":
             out.append({
                 "type": "name", "name": token["value"],
@@ -98,6 +117,17 @@ def parse_tokens(tokens, in_expr=0):
 
 def is_op(token, op):
     return token["type"] == "OP" and token["value"] == op
+
+
+def extract_fn_signature(tokens):
+    out = []
+
+    while len(tokens) > 0:
+        token = tokens.pop(0)
+        out.append(token)
+        if token["type"] == "OP" and token["value"] == ")":
+            break
+    return out
 
 
 def extract_scope_body(tokens):
