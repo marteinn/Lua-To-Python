@@ -34,18 +34,6 @@ def parse_tokens(tokens, in_expr=0):
             })
             continue
 
-        # if token["type"] == "NAME" and len(tokens) and is_op(tokens[0], "="):
-            # tokens.pop(0)  # Drop =
-
-            # assignments = extract_assignments(tokens)
-            # print(assignments)
-            # out.append({
-                # "type": "func-call",
-                # "left": token["value"],
-                # "right": parse_tokens(assignments),
-            # })
-            # continue
-
         if token["type"] == "NAME" and len(tokens) and is_op(tokens[0], "("):
             args = extract_args(tokens)
 
