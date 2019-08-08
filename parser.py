@@ -77,13 +77,13 @@ def parse_tokens(tokens, in_expr=0):
             continue
 
         if token["type"] == "KEYWORD" and token["value"] == "while":
-            while_nodes = extract_scope_body(tokens)
-            test_nodes = extract_test_statement(while_nodes, "do")
+            while_tokens = extract_scope_body(tokens)
+            test_tokens = extract_test_statement(while_tokens, "do")
 
             out.append({
                 "type": "while",
-                "test": parse_tokens(test_nodes),
-                "body": parse_tokens(while_nodes),
+                "test": parse_tokens(test_tokens),
+                "body": parse_tokens(while_tokens),
             })
             continue
 

@@ -37,10 +37,14 @@ Its only for getting to know the Python AST so please dont do anything serious w
 - [x] `return`
 - [ ] `not` eval
 - [ ] `bool` expression in comparison
+- [ ] `%` operator
+- [ ] `/` operator
 - [ ] Assign function return to variable
 - [ ] Double number support
 - [ ] Negative values
 - [ ] Anonymous functions
+- [ ] Table datatype
+- [ ] `_G` for globals access
 - [ ] `for` keyword
 - [ ] `repeat` keyword
 - [ ] Short circuit / tenary operator

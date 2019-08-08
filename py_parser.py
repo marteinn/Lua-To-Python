@@ -22,7 +22,8 @@ def parse_nodes(nodes):
 
         if node["type"] == "boolean":
             value = node["value"]
-            value = True if value == "True" else False
+            value = True if value == "true" else value
+            value = False if value == "false" else value
             out.append(out.append(ast.NameConstant(value=value)))
             continue
 

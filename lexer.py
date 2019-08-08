@@ -1,4 +1,4 @@
-# Covert source to tokens
+# Convert source to tokens
 
 import re
 
@@ -168,14 +168,6 @@ def extract_multiline_comment(chars):
     del chars[0:end_index+4]
     return val
 
-def extract_multiline_str(chars):
-    string_chars = "".join(chars)
-    end_index = string_chars.index("]]")
-
-    val = string_chars[2:end_index]
-    del chars[0:end_index+2]
-    return val
-
 
 def extract_comment(chars):
     string_chars = "".join(chars)
@@ -183,4 +175,13 @@ def extract_comment(chars):
 
     val = string_chars[2:end_index]
     del chars[0:end_index]
+    return val
+
+
+def extract_multiline_str(chars):
+    string_chars = "".join(chars)
+    end_index = string_chars.index("]]")
+
+    val = string_chars[2:end_index]
+    del chars[0:end_index+2]
     return val

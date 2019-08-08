@@ -4,3 +4,4 @@ function bar(a, b, c)
 end
 
 bar(1, 2, 3)
+-- v = bar(1, 2, 3) -- Not working
