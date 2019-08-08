@@ -34,12 +34,13 @@ Its only for getting to know the Python AST so please dont do anything serious w
 - [x] `<=` operator
 - [x] Boolean types
 - [x] `function` declarations
-- [ ] `return`
+- [x] `return`
 - [ ] `not` eval
-- [ ] Anonymous functions
 - [ ] `bool` expression in comparison
+- [ ] Assign function return to variable
 - [ ] Double number support
 - [ ] Negative values
+- [ ] Anonymous functions
 - [ ] `for` keyword
 - [ ] `repeat` keyword
 - [ ] Short circuit / tenary operator

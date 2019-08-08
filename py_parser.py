@@ -34,6 +34,12 @@ def parse_nodes(nodes):
             out.append(ast.NameConstant(value=None))
             continue
 
+        if node["type"] == "return":
+            out.append(
+                ast.Return(value=parse_nodes(node["value"])[0])
+            )
+            continue
+
         if node["type"] == "assign":
             out.append(
                 ast.Assign(

@@ -87,6 +87,14 @@ def parse_tokens(tokens, in_expr=0):
             })
             continue
 
+        if token["type"] == "KEYWORD" and token["value"] == "return":
+            assignments = extract_assignments(tokens)
+            out.append({
+                "type": "return",
+                "value": parse_tokens(assignments),
+            })
+            continue
+
         if token["type"] == "KEYWORD" and token["value"] == "function":
             function_tokens = extract_scope_body(tokens)
             signature_tokens = extract_fn_signature(function_tokens)

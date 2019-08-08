@@ -99,7 +99,9 @@ def is_operator(char):
     return char in ["~=", "=", "==", "(", ")", "<", "+", "-", "*", ">", "<"]
 
 
-KEYWORDS = ["while", "do", "end", "if", "elseif", "else", "then", "function"]
+KEYWORDS = [
+    "while", "do", "end", "if", "elseif", "else", "then", "function", "return"
+]
 
 
 def is_keyword(word):
