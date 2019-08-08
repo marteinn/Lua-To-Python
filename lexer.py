@@ -20,7 +20,6 @@ def lexer(source):
             tokens.append({"type": "MULTI-COMMENT", "value": comment})
             continue
 
-
         if chars[0:3] == ['n', 'i', 'l']:
             tokens.append({"type": "NIL", "value": 'nil'})
             del chars[0:3]
@@ -29,6 +28,11 @@ def lexer(source):
         if chars[0:2] == ["-", "-"]:
             comment = extract_comment(chars)
             tokens.append({"type": "COMMENT", "value": comment})
+            continue
+
+        if chars[0:3] == ["n", "o", "t"]:
+            tokens.append({"type": "OP", "value": "not"})
+            del chars[0:3]
             continue
 
         if chars[0:2] == ["~", "="]:
@@ -96,7 +100,7 @@ def lexer(source):
 
 
 def is_operator(char):
-    return char in ["~=", "=", "==", "(", ")", "<", "+", "-", "*", ">", "<"]
+    return char in ["~=", "=", "==", "(", ")", "<", "+", "-", "*", ">", "<", "not"]
 
 
 KEYWORDS = [

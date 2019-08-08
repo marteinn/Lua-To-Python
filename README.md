@@ -35,10 +35,12 @@ Its only for getting to know the Python AST so please dont do anything serious w
 - [x] Boolean types
 - [x] `function` declarations
 - [x] `return`
-- [ ] `not` eval
+- [x] `not` logical operator
 - [ ] `bool` expression in comparison
 - [ ] `%` operator
 - [ ] `/` operator
+- [ ] `or` logical operator
+- [ ] `and` logical operator
 - [ ] Assign function return to variable
 - [ ] Double number support
 - [ ] Negative values

@@ -198,6 +198,15 @@ def parse_nodes(nodes):
                 )
                 continue
 
+            if node["name"] == "not":
+                out.append(
+                    ast.UnaryOp(
+                        op=ast.Not(),
+                        operand=parse_nodes(node["args"])[0]
+                    )
+                )
+                continue
+
             out.append(
                 ast.Call(
                     func=ast.Name(id=node["name"], ctx=ast.Load()),

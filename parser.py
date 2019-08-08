@@ -25,6 +25,15 @@ def parse_tokens(tokens, in_expr=0):
             out.append({"type": "nil", "value": None})
             continue
 
+        if token["type"] == "OP" and token["value"] == "not":
+            assignments = extract_assignments(tokens)
+            out.append({
+                "type": "call",
+                "name": token["value"],
+                "args": parse_tokens(assignments),
+            })
+            continue
+
         if token["type"] == "OP" and token["value"] in OPERATORS:
             assignments = extract_assignments(tokens)
             out.append({

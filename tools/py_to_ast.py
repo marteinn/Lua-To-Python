@@ -6,9 +6,9 @@ import pprint
 tree = ast.parse(
 """
 
-def bar(a, b, c):
-    print(a, b, c)
-    return 1
+a = False
+if not a:
+    print("Oh no")
 
 
 """
