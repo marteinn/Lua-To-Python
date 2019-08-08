@@ -159,6 +159,28 @@ def parse_nodes(nodes):
                 )
                 continue
 
+            if node["name"] in ["and", "or"]:
+                ops = node["name"]
+
+                arg_left = parse_nodes([node["args"][0]])
+                arg_right = parse_nodes(node["args"][1])
+
+                ops_ref = {
+                    "and": ast.And,
+                    "or": ast.Or,
+                }
+
+                out.append(
+                    ast.BoolOp(
+                        op=ops_ref[ops](),
+                        values=[
+                            arg_left[0],
+                            arg_right[0],
+                        ]
+                    )
+                )
+                continue
+
             if node["name"] in [">", "<", "~=", "==", "<=", ">="]:
                 ops = node["name"]
 

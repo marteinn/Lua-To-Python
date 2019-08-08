@@ -5,9 +5,12 @@ import pprint
 
 tree = ast.parse(
 """
-
-a = 2 % 2
+a = True
+b = False
+if a or b:
+    print("YES")
 
 """
 )
 pprint.pprint(ast.dump(tree))
+

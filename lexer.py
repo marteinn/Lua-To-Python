@@ -30,6 +30,16 @@ def lexer(source):
             tokens.append({"type": "COMMENT", "value": comment})
             continue
 
+        if chars[0:3] == ["a", "n", "d"]:
+            tokens.append({"type": "OP", "value": "and"})
+            del chars[0:3]
+            continue
+
+        if chars[0:2] == ["o", "r"]:
+            tokens.append({"type": "OP", "value": "or"})
+            del chars[0:2]
+            continue
+
         if chars[0:3] == ["n", "o", "t"]:
             tokens.append({"type": "OP", "value": "not"})
             del chars[0:3]
