@@ -135,40 +135,24 @@ def parse_nodes(nodes):
                 )
                 continue
 
-            if node["name"] in ["-"]:
+            if node["name"] in ["-", "%", "+", "..", "*"]:
+                ops = node["name"]
+
                 arg_left = parse_nodes([node["args"][0]])
                 arg_right = parse_nodes(node["args"][1])
+
+                ops_ref = {
+                    "-": ast.Sub,
+                    "%": ast.Mod,
+                    "+": ast.Add,
+                    "..": ast.Add,
+                    "*": ast.Mult
+                }
 
                 out.append(
                     ast.BinOp(
                         left=arg_left[0],
-                        op=ast.Sub(),
-                        right=arg_right[0],
-                    )
-                )
-                continue
-
-            if node["name"] in ["+"] or node["name"] == "..":
-                arg_left = parse_nodes([node["args"][0]])
-                arg_right = parse_nodes(node["args"][1])
-
-                out.append(
-                    ast.BinOp(
-                        left=arg_left[0],
-                        op=ast.Add(),
-                        right=arg_right[0],
-                    )
-                )
-                continue
-
-            if node["name"] in ["*"]:
-                arg_left = parse_nodes([node["args"][0]])
-                arg_right = parse_nodes(node["args"][1])
-
-                out.append(
-                    ast.BinOp(
-                        left=arg_left[0],
-                        op=ast.Mult(),
+                        op=ops_ref[ops](),
                         right=arg_right[0],
                     )
                 )

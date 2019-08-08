@@ -100,7 +100,9 @@ def lexer(source):
 
 
 def is_operator(char):
-    return char in ["~=", "=", "==", "(", ")", "<", "+", "-", "*", ">", "<", "not"]
+    return char in [
+        "~=", "=", "==", "(", ")", "<", "+", "-", "*", ">", "<", "not", "%",
+    ]
 
 
 KEYWORDS = [

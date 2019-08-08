@@ -6,10 +6,7 @@ import pprint
 tree = ast.parse(
 """
 
-a = False
-if not a:
-    print("Oh no")
-
+a = 2 % 2
 
 """
 )

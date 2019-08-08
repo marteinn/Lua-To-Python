@@ -1,8 +1,7 @@
 # Lua to Python
 
-This is a project where I attempt to convert Lua to Python, by transforming Lua into Python AST and the running it.
+This is a project where I attempt to convert Lua to Python, by transforming Lua into Python AST and then running it.
 
-Its only for getting to know the Python AST so please dont do anything serious with it.
 
 ## Current status
 - Variable assignments, basic datatypes and comparisons, if statements, while loops and functions are working.
@@ -10,8 +9,8 @@ Its only for getting to know the Python AST so please dont do anything serious w
 
 ## Getting started
 
-- pip install click
-- python main.py <path-to.your-lua-file>
+- `pip install click`
+- `python main.py <path-to.your-lua-file>`
 
 
 ## Roadmap
@@ -36,8 +35,8 @@ Its only for getting to know the Python AST so please dont do anything serious w
 - [x] `function` declarations
 - [x] `return`
 - [x] `not` logical operator
-- [ ] `bool` expression in comparison
-- [ ] `%` operator
+- [x] `bool` expression in comparison
+- [x] `%` operator
 - [ ] `/` operator
 - [ ] `or` logical operator
 - [ ] `and` logical operator
