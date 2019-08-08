@@ -1,6 +1,8 @@
 # Covert tokens to AST
 
-OPERATORS = ["+", "-", "=", "*", ">", "<", "~=", "==", "..", ">=", "<=", "%"]
+OPERATORS = [
+    "+", "-", "=", "*", ">", "<", "~=", "==", "..", ">=", "<=", "%", "/",
+]
 
 
 def parse_tokens(tokens, in_expr=0):

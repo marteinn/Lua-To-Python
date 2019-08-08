@@ -135,7 +135,7 @@ def parse_nodes(nodes):
                 )
                 continue
 
-            if node["name"] in ["-", "%", "+", "..", "*"]:
+            if node["name"] in ["-", "%", "+", "..", "*", "/"]:
                 ops = node["name"]
 
                 arg_left = parse_nodes([node["args"][0]])
@@ -146,7 +146,8 @@ def parse_nodes(nodes):
                     "%": ast.Mod,
                     "+": ast.Add,
                     "..": ast.Add,
-                    "*": ast.Mult
+                    "*": ast.Mult,
+                    "/": ast.Div,
                 }
 
                 out.append(
