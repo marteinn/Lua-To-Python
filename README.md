@@ -41,7 +41,7 @@ This is a project where I attempt to convert Lua to Python, by transforming Lua 
 - [x] `or` logical operator
 - [x] `and` logical operator
 - [x] Assign function return to variable
-- [ ] Double number support
+- [x] Double number support
 - [ ] Negative values
 - [ ] Anonymous functions
 - [ ] Table datatype
@@ -50,6 +50,7 @@ This is a project where I attempt to convert Lua to Python, by transforming Lua 
 - [ ] `repeat` keyword
 - [ ] Short circuit / tenary operator
 - [ ] `local` variables
+- [ ] Numbers beginning with `.` (ex `.123`)
 - [ ] Undefined variables should return nil
 
 

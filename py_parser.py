@@ -28,7 +28,10 @@ def parse_nodes(nodes):
             continue
 
         if node["type"] == "number":
-            out.append(ast.Num(n=int(node["value"])))
+            value = node["value"]
+            value = float(value) if "." in value else int(value)
+
+            out.append(ast.Num(n=value))
             continue
 
         if node["type"] == "nil":

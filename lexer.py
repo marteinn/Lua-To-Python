@@ -146,7 +146,7 @@ def extract_operator(chars):
 def extract_num(chars):
     num = ""
     for letter in chars:
-        if not is_num(letter):
+        if not is_num(letter) and letter != ".":
             break
 
         num = num+letter
