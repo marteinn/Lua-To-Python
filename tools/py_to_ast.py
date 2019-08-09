@@ -5,10 +5,11 @@ import pprint
 
 tree = ast.parse(
 """
-a = True
-b = False
-if a or b:
-    print("YES")
+a = lambda x, y: cat(x)
+def main():
+    def sub_func():
+        return 1
+    return sub_func
 
 """
 )

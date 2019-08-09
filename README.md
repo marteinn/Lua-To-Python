@@ -9,7 +9,7 @@ This is a project where I attempt to convert Lua to Python, by transforming Lua 
 
 ## Getting started
 
-- `pip install click`
+- `pip install -r requirements.txt`
 - `python main.py <path-to.your-lua-file>`
 
 
@@ -52,7 +52,7 @@ This is a project where I attempt to convert Lua to Python, by transforming Lua 
 - [ ] `local` variables
 - [ ] Numbers beginning with `.` (ex `.123`)
 - [ ] Undefined variables should return nil
-- [ ] Add multiline line support to anonymous functions
+- [x] Add multiline line support to anonymous functions
 
 
 ## References

@@ -4,8 +4,18 @@ OPERATORS = [
     "+", "-", "=", "*", ">", "<", "~=", "==", "..", ">=", "<=", "%", "/", "and", "or",
 ]
 
+fn_name_index = 0
+
+
+def generate_function_name():
+    global fn_name_index
+
+    fn_name_index = fn_name_index + 1
+    return "__fn{0}".format(fn_name_index)
+
 
 def parse_tokens(tokens, in_body=0):
+
     out = []
 
     while len(tokens) > 0:
@@ -38,6 +48,17 @@ def parse_tokens(tokens, in_body=0):
 
         if token["type"] == "OP" and token["value"] in OPERATORS:
             assignments = extract_assignments(tokens)
+
+            # Move function outside assignment and declare it in above scope
+            # with keyword ref
+            if token["value"] == "=" and is_keyword(assignments[0], "function"):
+                fn_name = generate_function_name()
+
+                fn_tokens = parse_tokens(assignments)
+                fn_tokens[0]["name"] = fn_name
+                out.insert(-1, fn_tokens[0])
+                assignments = [{"type": "NAME", "value": fn_name}]
+
             out.append({
                 "type": "call",
                 "name": token["value"],
@@ -144,6 +165,10 @@ def is_op(token, op):
     return token["type"] == "OP" and token["value"] == op
 
 
+def is_keyword(token, keyword):
+    return token["type"] == "KEYWORD" and token["value"] == keyword
+
+
 def extract_fn_signature(tokens):
     out = []
 
@@ -164,7 +189,7 @@ def extract_scope_body(tokens):
         token = tokens.pop(0)
         out.append(token)
 
-        if token["type"] == "KEYWORD" and token["value"] == "if":
+        if token["type"] == "KEYWORD" and token["value"] in ["if", "function"]:
             depth = depth + 1
             continue
 
@@ -233,12 +258,22 @@ def extract_assignments(tokens):
     while len(tokens) > 0:
         token = tokens.pop(0)
 
+        if token["type"] == "KEYWORD" and token["value"] == "function":
+            out.append(token)
+            depth = depth + 1
+            continue
+
         if token["type"] == "OP" and token["value"] == "(":
             out.append(token)
             depth = depth + 1
             continue
 
         if token["type"] == "OP" and token["value"] == ")":
+            out.append(token)
+            depth = depth - 1
+            continue
+
+        if token["type"] == "KEYWORD" and token["value"] == "end":
             out.append(token)
             depth = depth - 1
             continue
