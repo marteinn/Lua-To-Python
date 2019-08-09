@@ -42,7 +42,7 @@ This is a project where I attempt to convert Lua to Python, by transforming Lua 
 - [x] `and` logical operator
 - [x] Assign function return to variable
 - [x] Double number support
-- [ ] Negative values
+- [x] Negative values
 - [ ] Anonymous functions
 - [ ] Table datatype
 - [ ] `_G` for globals access

@@ -65,6 +65,17 @@ def lexer(source):
             del chars[0:2]
             continue
 
+        if len(chars) >= 2 and char == "-" and is_num(chars[1]):
+            del chars[0:1]
+            num = "-"+extract_num(chars)
+            tokens.append({"type": "NUMBER", "value": num})
+            continue
+
+        if is_num(char):
+            num = extract_num(chars)
+            tokens.append({"type": "NUMBER", "value": num})
+            continue
+
         if is_operator(char):
             operator = extract_operator(chars)
             tokens.append({"type": "OP", "value": operator})
@@ -83,11 +94,6 @@ def lexer(source):
         if chars[0:2] == ["[", "["]:
             comment = extract_multiline_str(chars)
             tokens.append({"type": "STRING", "value": comment})
-            continue
-
-        if is_num(char):
-            num = extract_num(chars)
-            tokens.append({"type": "NUMBER", "value": num})
             continue
 
         if is_letter(char):
@@ -145,6 +151,7 @@ def extract_operator(chars):
 
 def extract_num(chars):
     num = ""
+
     for letter in chars:
         if not is_num(letter) and letter != ".":
             break
