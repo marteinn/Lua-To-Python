@@ -5,7 +5,7 @@ OPERATORS = [
 ]
 
 
-def parse_tokens(tokens, in_expr=0):
+def parse_tokens(tokens, in_body=0):
     out = []
 
     while len(tokens) > 0:
@@ -51,10 +51,10 @@ def parse_tokens(tokens, in_expr=0):
             expression = {
                 "type": "call",
                 "name": token["value"],
-                "args": parse_tokens(args, in_expr=1)
+                "args": parse_tokens(args)
             }
 
-            if not in_expr:  # Do not wrap expression if already running in one
+            if in_body:  # Do not wrap expression if already running in one
                 out.append({
                     "type": "expr",
                     "value": [expression],
@@ -69,7 +69,7 @@ def parse_tokens(tokens, in_expr=0):
 
             out.append({
                 "type": "else",
-                "body": parse_tokens(body),
+                "body": parse_tokens(body, in_body=1),
             })
             continue
 
@@ -82,7 +82,7 @@ def parse_tokens(tokens, in_expr=0):
             out.append({
                 "type": "if",
                 "test": parse_tokens(test_nodes),
-                "body": parse_tokens(body),
+                "body": parse_tokens(body, in_body=1),
                 "else": parse_tokens(if_nodes),
             })
             continue
@@ -94,7 +94,7 @@ def parse_tokens(tokens, in_expr=0):
             out.append({
                 "type": "while",
                 "test": parse_tokens(test_tokens),
-                "body": parse_tokens(while_tokens),
+                "body": parse_tokens(while_tokens, in_body=1),
             })
             continue
 
@@ -121,7 +121,7 @@ def parse_tokens(tokens, in_expr=0):
                 "type": "function",
                 "name": name_token["value"],
                 "args": list(parameter_tokens),
-                "body": parse_tokens(function_tokens),
+                "body": parse_tokens(function_tokens, in_body=1),
             })
             continue
 
@@ -253,7 +253,6 @@ def extract_args(tokens):
 
     while depth != 0:
         token = tokens.pop(0)
-        # print(token)
 
         if is_op(token, "("):
             depth = depth+1
@@ -268,5 +267,5 @@ def extract_args(tokens):
 
 
 def parse(tokens):
-    ast_ = parse_tokens(tokens)
+    ast_ = parse_tokens(tokens, in_body=1)
     return ast_

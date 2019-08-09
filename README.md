@@ -40,7 +40,7 @@ This is a project where I attempt to convert Lua to Python, by transforming Lua 
 - [x] `/` operator
 - [x] `or` logical operator
 - [x] `and` logical operator
-- [ ] Assign function return to variable
+- [x] Assign function return to variable
 - [ ] Double number support
 - [ ] Negative values
 - [ ] Anonymous functions
