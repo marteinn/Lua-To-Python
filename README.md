@@ -58,14 +58,15 @@ Example: `./compile.py --strip-comments=1 examples/functions.lua`
 - [x] Double number support
 - [x] Negative values
 - [x] Anonymous functions
-- [ ] Table datatype
 - [ ] `_G` for globals access
+- [ ] Table datatype
 - [ ] `for` keyword
 - [ ] `repeat` keyword
 - [ ] Short circuit / tenary operator
 - [ ] `local` variables
 - [ ] Numbers beginning with `.` (ex `.123`)
 - [ ] Undefined variables should return nil
+- [ ] `#` operator for retrieving Table/String length
 - [x] Add multiline line support to anonymous functions
 
 
