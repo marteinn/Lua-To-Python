@@ -3,6 +3,7 @@ import ast
 from pprint import pprint
 
 import click
+import astunparse
 
 import lexer
 import parser
@@ -15,6 +16,7 @@ import py_parser
 @click.option('--tokens', default=0)
 @click.option('--ast', default=0)
 @click.option('--py_ast', default=0)
+@click.option('--py_code', default=0)
 def run(source_file, **kwargs):
     file_handler = open(source_file, 'r')
     source = file_handler.read()
@@ -39,6 +41,10 @@ def run(source_file, **kwargs):
 
     if kwargs["py_ast"]:
         pprint(ast.dump(py_ast))
+        return
+
+    if kwargs["py_code"]:
+        print(astunparse.unparse(py_ast))
         return
 
     exec(compile(py_ast, filename="<ast>", mode="exec"))
