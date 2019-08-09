@@ -109,7 +109,13 @@ def parse_tokens(tokens, in_body=0):
         if token["type"] == "KEYWORD" and token["value"] == "function":
             function_tokens = extract_scope_body(tokens)
             signature_tokens = extract_fn_signature(function_tokens)
-            name_token = signature_tokens.pop(0)  # TODO: Add anonymous support
+            function_name = ""
+
+            if signature_tokens[0]["type"] == "NAME":
+                name_token = signature_tokens.pop(0)  # TODO: Add anonymous support
+                function_name = name_token["value"]
+            else:
+                function_name = None
 
             parameter_tokens = signature_tokens[1:-1]
             parameter_tokens = map(
@@ -119,7 +125,7 @@ def parse_tokens(tokens, in_body=0):
 
             out.append({
                 "type": "function",
-                "name": name_token["value"],
+                "name": function_name,
                 "args": list(parameter_tokens),
                 "body": parse_tokens(function_tokens, in_body=1),
             })

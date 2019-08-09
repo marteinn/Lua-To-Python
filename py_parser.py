@@ -69,6 +69,34 @@ def parse_nodes(nodes):
             )
             continue
 
+        if node["type"] == "function" and not node["name"]:
+            body_nodes = node["body"]
+
+            # Remove any return from labmda body
+            if len(body_nodes) and body_nodes[0]["type"] == "return":
+                body_nodes = body_nodes[0]["value"]
+
+            body_nodes = parse_nodes(body_nodes)
+            out.append(
+                ast.Lambda(
+                    args=ast.arguments(
+                            args=[
+                                ast.arg(
+                                    arg=x["name"],
+                                    annotation=None,
+                                ) for x in node["args"]
+                            ],
+                            vararg=None,
+                            kwonlyargs=[],
+                            kw_defaults=[],
+                            kwarg=None,
+                            defaults=[]
+                        ),
+                    body=body_nodes[0],
+                )
+            )
+            continue
+
         if node["type"] == "function":
             body_nodes = parse_nodes(node["body"])
             out.append(

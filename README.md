@@ -43,7 +43,7 @@ This is a project where I attempt to convert Lua to Python, by transforming Lua 
 - [x] Assign function return to variable
 - [x] Double number support
 - [x] Negative values
-- [ ] Anonymous functions
+- [x] Anonymous functions
 - [ ] Table datatype
 - [ ] `_G` for globals access
 - [ ] `for` keyword
@@ -52,6 +52,7 @@ This is a project where I attempt to convert Lua to Python, by transforming Lua 
 - [ ] `local` variables
 - [ ] Numbers beginning with `.` (ex `.123`)
 - [ ] Undefined variables should return nil
+- [ ] Add multiline line support to anonymous functions
 
 
 ## References
