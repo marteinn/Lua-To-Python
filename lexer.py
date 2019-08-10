@@ -175,7 +175,7 @@ def extract_str(indicator, chars):
 def extract_word(chars):
     word = ""
     for letter in chars:
-        if not is_letter(letter):
+        if not is_letter(letter) and not re.search(r'([0-9]|_)', letter):
             break
 
         word = word+letter

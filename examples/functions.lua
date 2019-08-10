@@ -18,3 +18,8 @@ end
 
 v = adder(5)
 print(v(2))
+
+a1 = adder(9)
+a2 = adder(36)
+print(a1(16))  --> 25
+print(a2(64))  --> 100

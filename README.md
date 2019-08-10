@@ -58,6 +58,7 @@ Example: `./compile.py --strip-comments=1 examples/functions.lua`
 - [x] Double number support
 - [x] Negative values
 - [x] Anonymous functions
+- [x] Variables with numbers in name
 - [ ] `_G` for globals access
 - [ ] Table datatype
 - [ ] `for` keyword
