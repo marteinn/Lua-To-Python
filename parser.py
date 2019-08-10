@@ -52,12 +52,7 @@ def parse_tokens(tokens, in_body=0):
             # Move function outside assignment and declare it in above scope
             # with keyword ref
             if token["value"] == "=" and is_keyword(assignments[0], "function"):
-                fn_name = generate_function_name()
-
-                fn_tokens = parse_tokens(assignments)
-                fn_tokens[0]["name"] = fn_name
-                out.insert(-1, fn_tokens[0])
-                assignments = [{"type": "NAME", "value": fn_name}]
+                assignments = inline_anonymous_function(assignments, out)
 
             out.append({
                 "type": "call",
@@ -121,6 +116,10 @@ def parse_tokens(tokens, in_body=0):
 
         if token["type"] == "KEYWORD" and token["value"] == "return":
             assignments = extract_assignments(tokens)
+
+            if is_keyword(assignments[0], "function"):
+                assignments = inline_anonymous_function(assignments, out)
+
             out.append({
                 "type": "return",
                 "value": parse_tokens(assignments),
@@ -194,6 +193,10 @@ def extract_scope_body(tokens):
             continue
 
         if depth > 0 and token["type"] == "KEYWORD" and token["value"] == "if":
+            depth = depth - 1
+            continue
+
+        if depth > 0 and token["type"] == "KEYWORD" and token["value"] == "end":
             depth = depth - 1
             continue
 
@@ -284,6 +287,15 @@ def extract_assignments(tokens):
         out.append(token)
 
     return out
+
+def inline_anonymous_function(tokens, out):
+    fn_name = generate_function_name()
+
+    fn_tokens = parse_tokens(tokens)
+    fn_tokens[0]["name"] = fn_name
+    out.insert(-1, fn_tokens[0])
+    assignments = [{"type": "NAME", "value": fn_name}]
+    return assignments
 
 
 def extract_args(tokens):
