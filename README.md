@@ -72,7 +72,7 @@ Example: `./compile.py --strip-comments=1 examples/functions.lua`
 - [ ] Undefined variables should return nil
 - [ ] `#` operator for retrieving Table/String length
 - [x] Add multiline line support to anonymous functions
-- [ ] BUG: Function cannot call itself through
+- [ ] BUG: Function cannot call itself
 - [ ] BUG: Function declaration in nested Table
 
 
