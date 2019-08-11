@@ -16,6 +16,23 @@ def parse_nodes(nodes):
     while len(nodes) > 0:
         node = nodes.pop(0)
 
+        if node["type"] == "table":
+            key_nodes = [x["args"][0] for x in node["value"]]
+            # Convert name references to strings
+            key_nodes = [
+                {"type": "string", "value": x["name"]}
+                    if x["type"] == "name" else x
+                for x in key_nodes
+            ]
+            key_nodes = parse_nodes(key_nodes)
+
+            value_nodes = [x["args"][1] for x in node["value"]]
+            value_nodes = [x[0] for x in value_nodes]
+            value_nodes = parse_nodes(value_nodes)
+
+            out.append(ast.Dict(keys=key_nodes, values=value_nodes))
+            continue
+
         if node["type"] == "string":
             out.append(ast.Str(s=node["value"]))
             continue

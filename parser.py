@@ -37,6 +37,11 @@ def parse_tokens(tokens, in_body=0):
             out.append({"type": "nil", "value": None})
             continue
 
+        if token["type"] == "OP" and token["value"] == "{":
+            table_tokens = extract_table(tokens)
+            out.append({"type": "table", "value": parse_tokens(table_tokens)})
+            continue
+
         if token["type"] == "OP" and token["value"] == "not":
             assignments = extract_assignments(tokens)
             out.append({
@@ -132,7 +137,7 @@ def parse_tokens(tokens, in_body=0):
             function_name = ""
 
             if signature_tokens[0]["type"] == "NAME":
-                name_token = signature_tokens.pop(0)  # TODO: Add anonymous support
+                name_token = signature_tokens.pop(0)
                 function_name = name_token["value"]
             else:
                 function_name = None
@@ -168,13 +173,31 @@ def is_keyword(token, keyword):
     return token["type"] == "KEYWORD" and token["value"] == keyword
 
 
+def extract_table(tokens):
+    out = []
+    depth = 0
+
+    while len(tokens) > 0:
+        token = tokens.pop(0)
+        out.append(token)
+
+        if depth > 0 and is_op(token, "}"):
+            depth = depth +1
+            continue
+
+        if is_op(token, "}"):
+            break
+
+    return out
+
+
 def extract_fn_signature(tokens):
     out = []
 
     while len(tokens) > 0:
         token = tokens.pop(0)
         out.append(token)
-        if token["type"] == "OP" and token["value"] == ")":
+        if is_op(token, ")"):
             break
     return out
 
@@ -192,11 +215,7 @@ def extract_scope_body(tokens):
             depth = depth + 1
             continue
 
-        if depth > 0 and token["type"] == "KEYWORD" and token["value"] == "if":
-            depth = depth - 1
-            continue
-
-        if depth > 0 and token["type"] == "KEYWORD" and token["value"] == "end":
+        if depth > 0 and token["type"] == "KEYWORD" and token["value"] in ["if", "end"]:
             depth = depth - 1
             continue
 
@@ -213,25 +232,25 @@ def extract_if_body(tokens):
     while len(tokens) > 0:
         token = tokens[0]
 
-        if token["type"] == "KEYWORD" and token["value"] == "if":
+        if is_keyword(token, "if"):
             out.append(token)
             tokens.pop(0)
             depth = depth + 1
             continue
 
-        if depth > 0 and token["type"] == "KEYWORD" and token["value"] == "end":
+        if depth > 0 and is_keyword(token, "end"):
             out.append(token)
             tokens.pop(0)
             depth = depth - 1
             continue
 
-        if depth == 0 and token["type"] == "KEYWORD" and token["value"] == "elseif":
+        if depth == 0 and is_keyword(token, "elseif"):
             break
 
-        if depth == 0 and token["type"] == "KEYWORD" and token["value"] == "else":
+        if depth == 0 and is_keyword(token, "else"):
             break
 
-        if depth == 0 and token["type"] == "KEYWORD" and token["value"] == "end":
+        if depth == 0 and is_keyword(token, "end"):
             break
 
         out.append(token)
@@ -246,7 +265,7 @@ def extract_test_statement(tokens, exit_keyword="then"):
     while len(tokens) > 0:
         token = tokens.pop(0)
 
-        if token["type"] == "KEYWORD" and token["value"] == exit_keyword:
+        if is_keyword(token, exit_keyword):
             break
 
         out.append(token)
@@ -261,27 +280,40 @@ def extract_assignments(tokens):
     while len(tokens) > 0:
         token = tokens.pop(0)
 
-        if token["type"] == "KEYWORD" and token["value"] == "function":
+        if is_keyword(token, "function"):
             out.append(token)
             depth = depth + 1
             continue
 
-        if token["type"] == "OP" and token["value"] == "(":
+        if is_op(token, "("):
             out.append(token)
             depth = depth + 1
             continue
 
-        if token["type"] == "OP" and token["value"] == ")":
+        if is_op(token, "{"):
+            out.append(token)
+            depth = depth + 1
+            continue
+
+        if is_op(token, ")"):
             out.append(token)
             depth = depth - 1
             continue
 
-        if token["type"] == "KEYWORD" and token["value"] == "end":
+        if is_keyword(token, "end"):
+            out.append(token)
+            depth = depth - 1
+            continue
+
+        if is_op(token, "}"):
             out.append(token)
             depth = depth - 1
             continue
 
         if token["type"] == "NL" and depth == 0:
+            break
+
+        if is_op(token, ",") and depth == 0:
             break
 
         out.append(token)

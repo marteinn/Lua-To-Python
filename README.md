@@ -60,7 +60,10 @@ Example: `./compile.py --strip-comments=1 examples/functions.lua`
 - [x] Anonymous functions
 - [x] Variables with numbers in name
 - [ ] `_G` for globals access
-- [ ] Table datatype
+- [x] Table datatype
+- [ ] Support for lteral notation (`['@!#']`) in Table
+- [ ] Dot property syntax in Table for string keys
+- [ ] Iterator for Table using `pairs`
 - [ ] `for` keyword
 - [ ] `repeat` keyword
 - [ ] Short circuit / tenary operator
@@ -69,6 +72,8 @@ Example: `./compile.py --strip-comments=1 examples/functions.lua`
 - [ ] Undefined variables should return nil
 - [ ] `#` operator for retrieving Table/String length
 - [x] Add multiline line support to anonymous functions
+- [ ] BUG: Function cannot call itself through
+- [ ] BUG: Function declaration in nested Table
 
 
 ## References
