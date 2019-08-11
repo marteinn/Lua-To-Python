@@ -61,9 +61,10 @@ Example: `./compile.py --strip-comments=1 examples/functions.lua`
 - [x] Variables with numbers in name
 - [x] Table datatype
 - [x] Support for accessing Table properties
-- [ ] Support for lteral notation (`['@!#']`) in Table
+- [x] Support for lteral notation (`['@!#']`) in Table
 - [ ] Dot property syntax in Table for string keys
 - [ ] Iterator for Table using `pairs`
+- [ ] List as argument to Table constructor
 - [ ] `_G` for globals access
 - [ ] `for` keyword
 - [ ] `repeat` keyword
