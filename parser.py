@@ -37,6 +37,15 @@ def parse_tokens(tokens, in_body=0, in_table_construct=0):
             out.append({"type": "nil", "value": None})
             continue
 
+        if token["type"] == "OP" and token["value"] == "#":
+            assignments = extract_assignments(tokens)
+            out.append({
+                "type": "call",
+                "name": "#",
+                "args": parse_tokens(assignments),
+            })
+            continue
+
         if token["type"] == "OP" and token["value"] == "{":
             table_tokens = extract_table(tokens)
             out.append({

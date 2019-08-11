@@ -182,6 +182,16 @@ def parse_nodes(nodes):
             continue
 
         if node["type"] == "call":
+            if node["name"] == "#":
+                out.append(
+                    ast.Call(
+                        func=ast.Name(id='len', ctx=ast.Load()),
+                        args=parse_nodes(node["args"]),
+                        keywords=[],
+                    )
+                )
+                continue
+
             if node["name"] == "[":
                 name_arg = node["args"][0]
 
