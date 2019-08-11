@@ -14,7 +14,7 @@ def generate_function_name():
     return "__fn{0}".format(fn_name_index)
 
 
-def parse_tokens(tokens, in_body=0):
+def parse_tokens(tokens, in_body=0, in_table_construct=0):
 
     out = []
 
@@ -39,7 +39,10 @@ def parse_tokens(tokens, in_body=0):
 
         if token["type"] == "OP" and token["value"] == "{":
             table_tokens = extract_table(tokens)
-            out.append({"type": "table", "value": parse_tokens(table_tokens)})
+            out.append({
+                "type": "table",
+                "value": parse_tokens(table_tokens, in_table_construct=1),
+            })
             continue
 
         if token["type"] == "OP" and token["value"] == "not":
@@ -51,7 +54,12 @@ def parse_tokens(tokens, in_body=0):
             })
             continue
 
-        if token["type"] == "OP" and token["value"] == "[":
+        # Ignore [ if beeing used as constructor in table
+        if in_table_construct == 1 and is_op(token, "["):
+            continue
+
+        # [ is beeing used as a accessor for table
+        if in_table_construct == 0 and is_op(token, "["):
             key_tokens = extract_until_end_op(tokens, "]")
 
             expression = {

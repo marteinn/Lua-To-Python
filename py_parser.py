@@ -6,6 +6,17 @@ import ast
 def ast_to_py_ast(nodes):
     ast_ = parse_nodes(nodes)
 
+    bootstrap = [
+        ast.ImportFrom(
+            module='core', names=[
+                ast.alias(name='*', asname=None)
+            ],
+            level=0
+        )
+    ]
+
+    ast_ = bootstrap + ast_
+
     tree = ast.Module(ast_)
     tree = ast.fix_missing_locations(tree)
     return tree
@@ -24,13 +35,26 @@ def parse_nodes(nodes):
                     if x["type"] == "name" else x
                 for x in key_nodes
             ]
-            key_nodes = parse_nodes(key_nodes)
+            # key_expressions = parse_nodes(key_nodes)
 
             value_nodes = [x["args"][1] for x in node["value"]]
             value_nodes = [x[0] for x in value_nodes]
             value_nodes = parse_nodes(value_nodes)
 
-            out.append(ast.Dict(keys=key_nodes, values=value_nodes))
+            keywords = []
+            for x in (zip(key_nodes, value_nodes)):
+                name_node, value_node = x
+                keywords.append(
+                    ast.keyword(arg=name_node["value"], value=value_node)
+                )
+
+            out.append(
+                ast.Call(
+                    func=ast.Name(id='Table', ctx=ast.Load()),
+                    args=[],
+                    keywords=keywords,
+                )
+            )
             continue
 
 
