@@ -33,6 +33,7 @@ def parse_nodes(nodes):
             out.append(ast.Dict(keys=key_nodes, values=value_nodes))
             continue
 
+
         if node["type"] == "string":
             out.append(ast.Str(s=node["value"]))
             continue
@@ -142,6 +143,21 @@ def parse_nodes(nodes):
             continue
 
         if node["type"] == "call":
+            if node["name"] == "[":
+                name_arg = node["args"][0]
+
+                out.append(
+                    ast.Subscript(
+                        value=ast.Name(id=name_arg["name"], ctx=ast.Load()),
+                        slice=ast.Index(
+                            value=parse_nodes(node["args"][1])[0]
+                        ),
+                        ctx=ast.Load(),
+                    )
+                )
+
+                continue
+
             if node["name"] == "=":
                 name_arg = node["args"][0]
 

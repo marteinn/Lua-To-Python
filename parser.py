@@ -51,6 +51,24 @@ def parse_tokens(tokens, in_body=0):
             })
             continue
 
+        if token["type"] == "OP" and token["value"] == "[":
+            key_tokens = extract_until_end_op(tokens, "]")
+
+            expression = {
+                "type": "call",
+                "name": "[",
+                "args": [out.pop(), parse_tokens(key_tokens)],
+            }
+
+            if in_body:  # Do not wrap expression if already running in one
+                out.append({
+                    "type": "expr",
+                    "value": [expression],
+                })
+            else:
+                out.append(expression)
+            continue
+
         if token["type"] == "OP" and token["value"] in OPERATORS:
             assignments = extract_assignments(tokens)
 
@@ -255,6 +273,19 @@ def extract_if_body(tokens):
 
         out.append(token)
         tokens.pop(0)
+
+    return out
+
+def extract_until_end_op(tokens, exit_op="]"):
+    out = []
+
+    while len(tokens) > 0:
+        token = tokens.pop(0)
+
+        if is_op(token, exit_op):
+            break
+
+        out.append(token)
 
     return out
 

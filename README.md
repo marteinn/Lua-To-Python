@@ -59,11 +59,12 @@ Example: `./compile.py --strip-comments=1 examples/functions.lua`
 - [x] Negative values
 - [x] Anonymous functions
 - [x] Variables with numbers in name
-- [ ] `_G` for globals access
 - [x] Table datatype
+- [x] Support for accessing Table properties
 - [ ] Support for lteral notation (`['@!#']`) in Table
 - [ ] Dot property syntax in Table for string keys
 - [ ] Iterator for Table using `pairs`
+- [ ] `_G` for globals access
 - [ ] `for` keyword
 - [ ] `repeat` keyword
 - [ ] Short circuit / tenary operator
