@@ -28,30 +28,45 @@ def parse_nodes(nodes):
         node = nodes.pop(0)
 
         if node["type"] == "table":
-            key_nodes = [x["args"][0] for x in node["value"]]
+            argument_nodes = []
+            keyword_nodes = []
+
+            for x in node["value"]:
+                if not (x["type"] == "call" and x["name"] == "="):
+                    argument_nodes.append(x)
+                    continue
+
+                keyword_nodes.append(x)
+
+            key_nodes = [x["args"][0] for x in keyword_nodes]
             # Convert name references to strings
             key_nodes = [
                 {"type": "string", "value": x["name"]}
                     if x["type"] == "name" else x
                 for x in key_nodes
             ]
-            # key_expressions = parse_nodes(key_nodes)
 
-            value_nodes = [x["args"][1] for x in node["value"]]
+            value_nodes = [x["args"][1] for x in keyword_nodes]
             value_nodes = [x[0] for x in value_nodes]
             value_nodes = parse_nodes(value_nodes)
 
             keywords = []
             for x in (zip(key_nodes, value_nodes)):
                 name_node, value_node = x
+                name = name_node["value"]
+
+                # Apply __ to make sure its casted in Table
+                if name_node["type"] == "number":
+                    name = "__{0}".format(name)
+
                 keywords.append(
-                    ast.keyword(arg=name_node["value"], value=value_node)
+                    ast.keyword(arg=name, value=value_node)
                 )
 
             out.append(
                 ast.Call(
                     func=ast.Name(id='Table', ctx=ast.Load()),
-                    args=[],
+                    args=parse_nodes(argument_nodes),
                     keywords=keywords,
                 )
             )

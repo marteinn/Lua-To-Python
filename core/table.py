@@ -13,14 +13,16 @@ class Table(object):
 
         for key, val in kwargs.items():
             if key[:2] == "__":
+                key = key[2:]
+
                 if is_castable_int(key):
                     key = int(key)
 
                 if isinstance(key, int):
                     # Numbers passed in constructor cannot override existing values
-                    if key >= len(self.val_list):
-                        self.val_dict[key] = val
-                    continue
+                    if key == len(self.val_list):
+                        self.val_list.append(val)
+                        continue
 
             self.val_dict[key] = val
 
@@ -28,7 +30,7 @@ class Table(object):
         return len(self.val_list) - 1
 
     def __getitem__(self, key):
-        if is_castable_int(key):
+        if isinstance(key, str) and is_castable_int(key):
             key = int(key)
 
         if isinstance(key, int) and key < len(self.val_list):
@@ -56,6 +58,12 @@ class Table(object):
 
         dict_rep = str(self.val_dict)
         dict_rep = dict_rep[12:-2]
+        if not dict_rep:
+            return "[{0}]".format(list_rep)
+
+        if not list_rep:
+            return "[{0}]".format(dict_rep)
+
         return "[{0}, {1}]".format(list_rep, dict_rep)
 
 """

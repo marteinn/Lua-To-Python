@@ -62,9 +62,10 @@ Example: `./compile.py --strip-comments=1 examples/functions.lua`
 - [x] Table datatype
 - [x] Support for accessing Table properties
 - [x] Support for lteral notation (`['@!#']`) in Table
+- [x] List as argument to Table constructor
+- [ ] `#` operator for retrieving Table/String length
 - [ ] Dot property syntax in Table for string keys
 - [ ] Iterator for Table using `pairs`
-- [ ] List as argument to Table constructor
 - [ ] `_G` for globals access
 - [ ] `for` keyword
 - [ ] `repeat` keyword
@@ -72,10 +73,11 @@ Example: `./compile.py --strip-comments=1 examples/functions.lua`
 - [ ] `local` variables
 - [ ] Numbers beginning with `.` (ex `.123`)
 - [ ] Undefined variables should return nil
-- [ ] `#` operator for retrieving Table/String length
 - [x] Add multiline line support to anonymous functions
 - [ ] BUG: Function cannot call itself
 - [ ] BUG: Function declaration in nested Table
+- [ ] BUG: Nested attribute retrival with `["random"]["random2"]`
+- [ ] BUG: Decimal type key in Table
 
 
 ## References
