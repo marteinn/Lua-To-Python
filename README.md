@@ -64,9 +64,9 @@ Example: `./compile.py --strip-comments=1 examples/functions.lua`
 - [x] Support for lteral notation (`['@!#']`) in Table
 - [x] List as argument to Table constructor
 - [x] `#` operator for retrieving Table/String length
-- [ ] Dot property syntax in Table for string keys
-- [ ] Iterator for Table using `pairs`
+- [x] Iterator for Table using `pairs`/`ipairs`
 - [ ] `_G` for globals access
+- [ ] Dot property syntax in Table for string keys
 - [ ] `for` keyword
 - [ ] `repeat` keyword
 - [ ] Short circuit / tenary operator

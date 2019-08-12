@@ -2,6 +2,14 @@ import re
 from collections import OrderedDict
 
 
+def pairs(table):
+    return table.__pairs__()
+
+
+def ipairs(table):
+    return table.__ipairs__()
+
+
 def is_castable_int(val):
     return re.search(r'^([0-9]*)$', val)
 
@@ -51,6 +59,17 @@ class Table(object):
 
     def __getattr__(self, key):
         return self.val_dict[key]
+
+    def __pairs__(self):
+        from itertools import chain
+
+        return chain(self.__ipairs__(), self.val_dict.items())
+
+    def __ipairs__(self):
+        for key, val in enumerate(self.val_list):
+            if key == 0 and val == None:
+                continue
+            yield key, val
 
     def __str__(self):
         list_rep = str(self.val_list[1:])
