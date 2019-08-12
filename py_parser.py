@@ -193,11 +193,19 @@ def parse_nodes(nodes):
                 continue
 
             if node["name"] == "[":
-                name_arg = node["args"][0]
+                value_node = node["args"][0]
+
+                if value_node["type"] == "call":
+                    value_expression = parse_nodes([value_node])[0]
+                else:
+                    value_expression = ast.Name(
+                        id=value_node["name"],
+                        ctx=ast.Load(),
+                    )
 
                 out.append(
                     ast.Subscript(
-                        value=ast.Name(id=name_arg["name"], ctx=ast.Load()),
+                        value=value_expression,
                         slice=ast.Index(
                             value=parse_nodes(node["args"][1])[0]
                         ),
