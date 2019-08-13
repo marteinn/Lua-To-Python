@@ -65,9 +65,9 @@ Example: `./compile.py --strip-comments=1 examples/functions.lua`
 - [x] List as argument to Table constructor
 - [x] `#` operator for retrieving Table/String length
 - [x] Iterator for Table using `pairs`/`ipairs`
-- [ ] `_G` for globals access
-- [ ] Dot property syntax in Table for string keys
+- [x] `_G` for globals access
 - [ ] `for` keyword
+- [ ] Dot property syntax in Table for string keys
 - [ ] `repeat` keyword
 - [ ] Short circuit / tenary operator
 - [ ] `local` variables

@@ -27,6 +27,16 @@ def parse_nodes(nodes):
     while len(nodes) > 0:
         node = nodes.pop(0)
 
+        if node["type"] == "name" and node["name"] == "_G":
+            out.append(
+                ast.Call(
+                    func=ast.Name(id='globals', ctx=ast.Load()),
+                    args=[],
+                    keywords=[],
+                )
+            )
+            continue
+
         if node["type"] == "table":
             argument_nodes = []
             keyword_nodes = []
@@ -194,14 +204,7 @@ def parse_nodes(nodes):
 
             if node["name"] == "[":
                 value_node = node["args"][0]
-
-                if value_node["type"] == "call":
-                    value_expression = parse_nodes([value_node])[0]
-                else:
-                    value_expression = ast.Name(
-                        id=value_node["name"],
-                        ctx=ast.Load(),
-                    )
+                value_expression = parse_nodes([value_node])[0]
 
                 out.append(
                     ast.Subscript(
