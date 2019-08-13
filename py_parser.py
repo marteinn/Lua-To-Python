@@ -123,8 +123,11 @@ def parse_nodes(nodes):
             continue
 
         if node["type"] == "name":
+            ctx = ast.Load() if node.get("behaviour", "load") == "load" \
+                else ast.Store()
+
             out.append(
-                ast.Name(id=node["name"], ctx=ast.Load())
+                ast.Name(id=node["name"], ctx=ctx)
             )
             continue
 
@@ -170,6 +173,21 @@ def parse_nodes(nodes):
                     test=test_nodes[0],
                     body=body_nodes,
                     orelse=else_nodes,
+                )
+            )
+            continue
+
+        if node["type"] == "for":
+            target_expr = parse_nodes(node["target"])
+            iteration_expr = parse_nodes(node["iteration"])
+            body_expr = parse_nodes(node["body"])
+
+            out.append(
+                ast.For(
+                    target=target_expr[0],
+                    iter=iteration_expr[0],
+                    body=body_expr,
+                    orelse=[]
                 )
             )
             continue

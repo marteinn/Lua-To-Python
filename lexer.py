@@ -123,7 +123,8 @@ def is_operator(char):
 
 
 KEYWORDS = [
-    "while", "do", "end", "if", "elseif", "else", "then", "function", "return"
+    "while", "do", "end", "if", "elseif", "else", "then", "function", "return",
+    "for", "in",
 ]
 
 

@@ -143,6 +143,27 @@ def parse_tokens(tokens, in_body=0, in_table_construct=0):
             })
             continue
 
+        if token["type"] == "KEYWORD" and token["value"] == "for":
+            body_tokens = extract_scope_body(tokens)
+            test_tokens = extract_test_statement(body_tokens, "do")
+
+            target_tokens = extract_test_statement(test_tokens, "in")
+
+            # Make all names to be stored (instead of loaded)
+            for index, x in enumerate(target_tokens):
+                if x["type"] != "NAME":
+                    continue
+
+                x["behaviour"] = "store"
+
+            out.append({
+                "type": "for",
+                "target": parse_tokens(target_tokens),
+                "iteration": parse_tokens(test_tokens),
+                "body": parse_tokens(body_tokens, in_body=1),
+            })
+            continue
+
         if token["type"] == "KEYWORD" and token["value"] == "while":
             while_tokens = extract_scope_body(tokens)
             test_tokens = extract_test_statement(while_tokens, "do")
@@ -192,8 +213,12 @@ def parse_tokens(tokens, in_body=0, in_table_construct=0):
             continue
 
         if token["type"] == "NAME":
+            behaviour = token.get("behaviour", "load")
+
             out.append({
-                "type": "name", "name": token["value"],
+                "type": "name",
+                "name": token["value"],
+                "behaviour": behaviour,
             })
             continue
 
