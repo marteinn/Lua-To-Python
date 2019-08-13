@@ -199,6 +199,12 @@ def parse_tokens(tokens, in_body=0, in_table_construct=0):
                 function_name = None
 
             parameter_tokens = signature_tokens[1:-1]
+            # Only accept name as argument
+            parameter_tokens = filter(
+                lambda x: x["type"] == "NAME",
+                parameter_tokens
+            )
+
             parameter_tokens = map(
                 lambda x: {"type": "argument", "name": x["value"]},
                 parameter_tokens
