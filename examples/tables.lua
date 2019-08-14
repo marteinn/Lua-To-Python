@@ -18,3 +18,6 @@ print(u)
 print(v[1])
 print(v)
 print(v)
+
+
+print({a = 1})

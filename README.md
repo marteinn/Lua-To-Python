@@ -68,7 +68,7 @@ Example: `./compile.py --strip-comments=1 examples/functions.lua`
 - [x] `_G` for globals access
 - [x] `for` keyword
 - [x] Add multiple assignment support (`x, y, z = 1, 2, 3`)
-- [ ] Add multiple assignment support in for loop target+iterator
+- [x] Add multiple assignment support in for loop target+iterator
 - [ ] `repeat` keyword
 - [ ] Short circuit / tenary operator
 - [ ] `local` variables

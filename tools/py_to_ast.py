@@ -5,12 +5,7 @@ import pprint
 
 tree = ast.parse(
 """
-a = lambda x, y: cat(x)
-def main():
-    def sub_func():
-        return 1
-    return sub_func
-
+globals()["a"] = 1
 """
 )
 pprint.pprint(ast.dump(tree))
