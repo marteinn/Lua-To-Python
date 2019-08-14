@@ -19,10 +19,11 @@ def ast_to_py_ast(nodes):
 
     tree = ast.Module(ast_)
     tree = ast.fix_missing_locations(tree)
+
     return tree
 
 
-def parse_nodes(nodes):
+def parse_nodes(nodes, ctx_klass=ast.Load):
     out = []
     while len(nodes) > 0:
         node = nodes.pop(0)
@@ -33,6 +34,17 @@ def parse_nodes(nodes):
                     func=ast.Name(id='globals', ctx=ast.Load()),
                     args=[],
                     keywords=[],
+                )
+            )
+            continue
+
+        if node["type"] == "tuple":
+            expressions = parse_nodes(node["value"], ctx_klass=ctx_klass)
+
+            out.append(
+                ast.Tuple(
+                    elts=expressions,
+                    ctx=ctx_klass(),
                 )
             )
             continue
@@ -82,7 +94,6 @@ def parse_nodes(nodes):
             )
             continue
 
-
         if node["type"] == "string":
             out.append(ast.Str(s=node["value"]))
             continue
@@ -123,11 +134,8 @@ def parse_nodes(nodes):
             continue
 
         if node["type"] == "name":
-            ctx = ast.Load() if node.get("behaviour", "load") == "load" \
-                else ast.Store()
-
             out.append(
-                ast.Name(id=node["name"], ctx=ctx)
+                ast.Name(id=node["name"], ctx=ctx_klass()),
             )
             continue
 
@@ -178,7 +186,7 @@ def parse_nodes(nodes):
             continue
 
         if node["type"] == "for":
-            target_expr = parse_nodes(node["target"])
+            target_expr = parse_nodes(node["target"], ctx_klass=ast.Store)
             iteration_expr = parse_nodes(node["iteration"])
             body_expr = parse_nodes(node["body"])
 
@@ -238,13 +246,15 @@ def parse_nodes(nodes):
 
             if node["name"] == "=":
                 name_arg = node["args"][0]
+                value_arg = node["args"][1]
+
+                target_expr = parse_nodes([name_arg], ctx_klass=ast.Store)
+                value_expr = parse_nodes(value_arg)
 
                 out.append(
                     ast.Assign(
-                        targets=[
-                            ast.Name(id=name_arg["name"], ctx=ast.Store())
-                        ],
-                        value=parse_nodes(node["args"][1])[0],
+                        targets=target_expr,
+                        value=value_expr[0],
                     )
                 )
                 continue
@@ -331,7 +341,7 @@ def parse_nodes(nodes):
             out.append(
                 ast.Call(
                     func=ast.Name(id=node["name"], ctx=ast.Load()),
-                    args=parse_nodes(node["args"]),
+                    args=parse_nodes(node["args"], ctx_klass=ast.Load),
                     keywords=[]
                 )
             )

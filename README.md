@@ -66,13 +66,15 @@ Example: `./compile.py --strip-comments=1 examples/functions.lua`
 - [x] `#` operator for retrieving Table/String length
 - [x] Iterator for Table using `pairs`/`ipairs`
 - [x] `_G` for globals access
-- [ ] `for` keyword
-- [ ] Dot property syntax in Table for string keys
+- [x] `for` keyword
+- [x] Add multiple assignment support (`x, y, z = 1, 2, 3`)
+- [ ] Add multiple assignment support in for loop target+iterator
 - [ ] `repeat` keyword
 - [ ] Short circuit / tenary operator
 - [ ] `local` variables
 - [ ] Numbers beginning with `.` (ex `.123`)
 - [ ] Undefined variables should return nil
+- [ ] Dot property syntax in Table for string keys
 - [x] Add multiline line support to anonymous functions
 - [ ] BUG: Function cannot call itself
 - [ ] BUG: Function declaration in nested Table

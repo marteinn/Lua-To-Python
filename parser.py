@@ -1,4 +1,5 @@
 # Covert tokens to AST
+from pprint import pprint
 
 OPERATORS = [
     "+", "-", "=", "*", ">", "<", "~=", "==", "..", ">=", "<=", "%", "/", "and", "or",
@@ -14,12 +15,37 @@ def generate_function_name():
     return "__fn{0}".format(fn_name_index)
 
 
-def parse_tokens(tokens, in_body=0, in_table_construct=0):
+def parse_tokens(tokens, in_body=0, in_table_construct=0, in_fn_arguments=0):
 
     out = []
 
     while len(tokens) > 0:
         token = tokens.pop(0)
+
+        # Make sure we do not construct tuple when comma list is passed
+        # as function arguments/table constructor
+        if len(tokens) \
+                and is_op(tokens[0], ",") \
+                and in_fn_arguments == 0 \
+                and in_table_construct == 0:
+
+            tuple_tokens = [token]
+            tokens.pop(0)
+
+            # Continue through comma list until the end
+            while len(tokens) > 0:
+                tuple_tokens.append(tokens.pop(0))
+
+                if len(tokens) == 0:
+                    break
+
+                if not is_op(tokens[0], ","):
+                    break
+
+                tokens.pop(0)
+
+            out.append({"type": "tuple", "value": parse_tokens(tuple_tokens)})
+            continue
 
         if token["type"] == "NUMBER":
             out.append({"type": "number", "value": token["value"]})
@@ -48,9 +74,19 @@ def parse_tokens(tokens, in_body=0, in_table_construct=0):
 
         if token["type"] == "OP" and token["value"] == "{":
             table_tokens = extract_table(tokens)
+            table_tokens = extract_assignments_by_comma(table_tokens)
+
+            nodes = map(
+                lambda x: parse_tokens(x, in_table_construct=1),
+                table_tokens
+            )
+
+            nodes = [x[0] for x in nodes]
+
+            # print(table_tokens)
             out.append({
                 "type": "table",
-                "value": parse_tokens(table_tokens, in_table_construct=1),
+                "value": nodes,
             })
             continue
 
@@ -97,7 +133,13 @@ def parse_tokens(tokens, in_body=0, in_table_construct=0):
             out.append({
                 "type": "call",
                 "name": token["value"],
-                "args": [out.pop(), parse_tokens(assignments)],
+                "args": [
+                    out.pop(),
+                    parse_tokens(
+                        assignments,
+                        in_table_construct=in_table_construct,
+                    )
+                ],
             })
             continue
 
@@ -107,7 +149,7 @@ def parse_tokens(tokens, in_body=0, in_table_construct=0):
             expression = {
                 "type": "call",
                 "name": token["value"],
-                "args": parse_tokens(args)
+                "args": parse_tokens(args, in_fn_arguments=1)
             }
 
             if in_body:  # Do not wrap expression if already running in one
@@ -148,13 +190,6 @@ def parse_tokens(tokens, in_body=0, in_table_construct=0):
             test_tokens = extract_test_statement(body_tokens, "do")
 
             target_tokens = extract_test_statement(test_tokens, "in")
-
-            # Make all names to be stored (instead of loaded)
-            for index, x in enumerate(target_tokens):
-                if x["type"] != "NAME":
-                    continue
-
-                x["behaviour"] = "store"
 
             out.append({
                 "type": "for",
@@ -219,12 +254,9 @@ def parse_tokens(tokens, in_body=0, in_table_construct=0):
             continue
 
         if token["type"] == "NAME":
-            behaviour = token.get("behaviour", "load")
-
             out.append({
                 "type": "name",
                 "name": token["value"],
-                "behaviour": behaviour,
             })
             continue
 
@@ -337,6 +369,19 @@ def extract_until_end_op(tokens, exit_op="]"):
 
     return out
 
+def extract_until_end_op(tokens, exit_op="]"):
+    out = []
+
+    while len(tokens) > 0:
+        token = tokens.pop(0)
+
+        if is_op(token, exit_op):
+            break
+
+        out.append(token)
+
+    return out
+
 
 def extract_test_statement(tokens, exit_keyword="then"):
     out = []
@@ -392,9 +437,6 @@ def extract_assignments(tokens):
         if token["type"] == "NL" and depth == 0:
             break
 
-        if is_op(token, ",") and depth == 0:
-            break
-
         out.append(token)
 
     return out
@@ -428,6 +470,34 @@ def extract_args(tokens):
 
     args = args[:-1]  # Drop )
     return args
+
+
+def extract_assignments_by_comma(tokens):
+    pairs = [[]]
+    depth = 0
+
+    while len(tokens) > 0:
+        token = tokens.pop(0)
+
+        if is_op(token, "{"):
+            depth = depth + 1
+
+        if is_op(token, "("):
+            depth = depth + 1
+
+        if is_op(token, "}"):
+            depth = depth - 1
+
+        if is_op(token, ")"):
+            depth = depth - 1
+
+        if depth == 0 and is_op(token, ","):
+            pairs.append([])
+            continue
+
+        pairs[-1].append(token)
+
+    return pairs
 
 
 def parse(tokens):
