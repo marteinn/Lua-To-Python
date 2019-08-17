@@ -187,8 +187,22 @@ def parse_nodes(nodes, ctx_klass=ast.Load):
 
         if node["type"] == "for":
             target_expr = parse_nodes(node["target"], ctx_klass=ast.Store)
-            iteration_expr = parse_nodes(node["iteration"])
             body_expr = parse_nodes(node["body"])
+
+            iteration_nodes = node["iteration"]
+
+            # Apply range constructor
+            if iteration_nodes[0]["type"] == "tuple":
+                iteration_expr = [
+                    ast.Call(
+                        func=ast.Name(id='get_for_range', ctx=ast.Load()),
+                        args=parse_nodes(iteration_nodes[0]["value"]),
+                        keywords=[],
+                    )
+                ]
+
+            else:
+                iteration_expr = parse_nodes(iteration_nodes)
 
             out.append(
                 ast.For(

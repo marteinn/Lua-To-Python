@@ -174,7 +174,7 @@ def parse_tokens(tokens, in_body=0, in_table_construct=0, in_fn_arguments=0):
         if token["type"] == "KEYWORD" and token["value"] in ["if", "elseif"]:
             if_nodes = extract_scope_body(tokens)
 
-            test_nodes = extract_test_statement(if_nodes, "then")
+            test_nodes = extract_to_keyword(if_nodes, "then")
             body = extract_if_body(if_nodes)
 
             out.append({
@@ -186,22 +186,26 @@ def parse_tokens(tokens, in_body=0, in_table_construct=0, in_fn_arguments=0):
             continue
 
         if token["type"] == "KEYWORD" and token["value"] == "for":
-            body_tokens = extract_scope_body(tokens)
-            test_tokens = extract_test_statement(body_tokens, "do")
 
-            target_tokens = extract_test_statement(test_tokens, "in")
+
+            body_tokens = extract_scope_body(tokens)
+            iteration_tokens = extract_to_keyword(body_tokens, "do")
+            if contains_op(iteration_tokens, "="):
+                target_tokens = extract_to_op(iteration_tokens, "=")
+            else:
+                target_tokens = extract_to_keyword(iteration_tokens, "in")
 
             out.append({
                 "type": "for",
                 "target": parse_tokens(target_tokens),
-                "iteration": parse_tokens(test_tokens),
+                "iteration": parse_tokens(iteration_tokens),
                 "body": parse_tokens(body_tokens, in_body=1),
             })
             continue
 
         if token["type"] == "KEYWORD" and token["value"] == "while":
             while_tokens = extract_scope_body(tokens)
-            test_tokens = extract_test_statement(while_tokens, "do")
+            test_tokens = extract_to_keyword(while_tokens, "do")
 
             out.append({
                 "type": "while",
@@ -264,7 +268,7 @@ def parse_tokens(tokens, in_body=0, in_table_construct=0, in_fn_arguments=0):
 
 
 def is_op(token, op):
-    return token["type"] == "OP" and token["value"] == op
+    return token.get("type", None) == "OP" and token["value"] == op
 
 
 def is_keyword(token, keyword):
@@ -383,7 +387,20 @@ def extract_until_end_op(tokens, exit_op="]"):
     return out
 
 
-def extract_test_statement(tokens, exit_keyword="then"):
+def extract_to_op(tokens, exit_op="="):
+    out = []
+
+    while len(tokens) > 0:
+        token = tokens.pop(0)
+
+        if is_op(token, exit_op):
+            break
+
+        out.append(token)
+
+    return out
+
+def extract_to_keyword(tokens, exit_keyword="then"):
     out = []
 
     while len(tokens) > 0:
@@ -498,6 +515,13 @@ def extract_assignments_by_comma(tokens):
         pairs[-1].append(token)
 
     return pairs
+
+
+def contains_op(tokens, op):
+    for token in tokens:
+        if is_op(token, op):
+            return True
+    return False
 
 
 def parse(tokens):
