@@ -69,17 +69,20 @@ Example: `./compile.py --strip-comments=1 examples/functions.lua`
 - [x] `for` keyword
 - [x] Add multiple assignment support (`x, y, z = 1, 2, 3`)
 - [x] Add multiple assignment support in for loop target+iterator
+- [x] Add multiline line support to anonymous functions
 - [ ] `repeat` keyword
 - [ ] Short circuit / tenary operator
 - [ ] `local` variables
 - [ ] Numbers beginning with `.` (ex `.123`)
 - [ ] Undefined variables should return nil
 - [ ] Dot property syntax in Table for string keys
-- [x] Add multiline line support to anonymous functions
+- [ ] Function calls with single params should not require parens
+- [ ] Metatable support for tables
 - [ ] BUG: Function cannot call itself
 - [ ] BUG: Function declaration in nested Table
 - [ ] BUG: Nested attribute retrival with `["random"]["random2"]`
 - [ ] BUG: Decimal type key in Table
+- [ ] BUG: Table construct in function (ex: `pairs({a=1, b=2, c=3})`
 
 
 ## References
