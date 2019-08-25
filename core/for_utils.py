@@ -5,9 +5,6 @@ def get_for_range(start, end, step=1):
         comp = lambda x, y: x >= y
 
     index = start
-    out = []
     while comp(index, end):
-        out.append(index)
+        yield index
         index = index + step
-
-    return out
