@@ -17,7 +17,7 @@ def ast_to_py_ast(nodes):
 
     ast_ = bootstrap + ast_
 
-    tree = ast.Module(ast_)
+    tree = ast.Module(ast_, [])
     tree = ast.fix_missing_locations(tree)
 
     return tree
@@ -159,6 +159,7 @@ def parse_nodes(nodes, ctx_klass=ast.Load):
                                 annotation=None,
                             ) for x in node["args"]
                         ],
+                        posonlyargs=[],
                         vararg=None,
                         kwonlyargs=[],
                         kw_defaults=[],
